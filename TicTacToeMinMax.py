@@ -36,7 +36,7 @@ def main(personChoices, computerChoices, gameBoard, user="person"):
                 print(winner)
             elif gameOver:
                 print("Tie")
-            time.sleep(1)
+            time.sleep(.5)
             user = "computer"
 
         elif user == "computer":
@@ -54,6 +54,14 @@ def main(personChoices, computerChoices, gameBoard, user="person"):
             elif gameOver:
                 print("Tie")
             user = "person"
+
+
+def printGameBoard(board):
+    """Prints the board"""
+    for i in range(0, len(board)):
+        for j in range(0, len(board)):
+            print(board[i][j], end=" ")
+        print()
 
 
 def makeMove(board, user, depth, isMax):
@@ -98,14 +106,6 @@ def positionHelper(a, b, c, board, position, symbol):
                 computerChoices.append(position)
 
 
-def printGameBoard(board):
-    """Prints the board"""
-    for i in range(0, len(board)):
-        for j in range(0, len(board)):
-            print(board[i][j], end=" ")
-        print()
-
-
 def placePieceForEval(board, user, position):
     """Places the user's piece at a specified position for evaluation in minimax"""
     symbol = "X" if user == "person" else "O"
@@ -123,26 +123,6 @@ def convertPosToBoard(pos):
     boardDict = {1: (0, 0), 2: (0, 2), 3: (0, 4), 4: (2, 0), 5: (2, 2), 6: (2, 4), 7: (4, 0), 8: (4, 2), 9: (4, 4)}
     return boardDict[pos]
 
-
-def checkWinner(user, personChoices, computerChoices):
-    """Given user, personChoices, and computerChoices, checks for the winner.
-    Return the score, winner (or a tie), and True if the game is over/False if not"""
-    allWinning = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9],
-                  [3, 5, 7]]  # list of lists of all winning positions
-
-    for w in allWinning:
-        if w[0] in personChoices and w[1] in personChoices and w[2] in personChoices:
-            return 10, "Player wins", True
-
-    for w in allWinning:
-        if w[0] in computerChoices and w[1] in computerChoices and w[2] in computerChoices:
-            return -10, "Computer wins", True
-
-    if len(personChoices) + len(computerChoices) == 9:
-        # print("Tie")
-        return 0, "Tie", True
-
-    return 0, "", False
 
 def minimax(board, depth, isMax, personChoices, computerChoices):
     """The minimax algorithm evaluates all future positions, assuming that the opponent
@@ -191,6 +171,27 @@ def minimax(board, depth, isMax, personChoices, computerChoices):
                         bestMoveRow = m
                         bestMoveCol = n
         return bestScore, bestMoveRow, bestMoveCol
+
+
+def checkWinner(user, personChoices, computerChoices):
+    """Given user, personChoices, and computerChoices, checks for the winner.
+    Return the score, winner (or a tie), and True if the game is over/False if not"""
+    allWinning = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9],
+                  [3, 5, 7]]  # list of lists of all winning positions
+
+    for w in allWinning:
+        if w[0] in personChoices and w[1] in personChoices and w[2] in personChoices:
+            return 10, "Player wins", True
+
+    for w in allWinning:
+        if w[0] in computerChoices and w[1] in computerChoices and w[2] in computerChoices:
+            return -10, "Computer wins", True
+
+    if len(personChoices) + len(computerChoices) == 9:
+        # print("Tie")
+        return 0, "Tie", True
+
+    return 0, "", False
 
 
 main(personChoices, computerChoices, gameBoard2)
